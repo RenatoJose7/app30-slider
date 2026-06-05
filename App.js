@@ -3,52 +3,75 @@ import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 
 export default function App() {
+  const [red, setRed] = useState(120);
+  const [green, setGreen] = useState(80);
+  const [blue, setBlue] = useState(200);
 
+  const rgbColor = `rgb(${red}, ${green}, ${blue})`;
 
-
-
-
-
- 
+  const hexColor = useMemo(() => {
+    const toHex = (value) => value.toString(16).padStart(2, '0').toUpperCase();
+    return `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
+  }, [red, green, blue]);
 
   return (
-    <View >
-      
-      <View >
-        <View >
-          <Text >Seletor de Cores</Text>
-          <Text ></Text>
-          <Text ></Text>
+    <View style={[estilos.container, { backgroundColor: rgbColor }]}>
+      <View style={estilos.content}>
+        <View style={estilos.infoCard}>
+          <Text style={estilos.title}>Seletor de Cores</Text>
+          <Text style={estilos.hexText}>{hexColor}</Text>
+          <Text style={estilos.rgbText}>{rgbColor}</Text>
         </View>
 
         <View style={estilos.controls}>
-          
+          <ColorSlider
+            label="Vermelho"
+            value={red}
+            onChange={setRed}
+            color="#ff3b30"
+          />
+
+          <ColorSlider
+            label="Verde"
+            value={green}
+            onChange={setGreen}
+            color="#34c759"
+          />
+
+          <ColorSlider
+            label="Azul"
+            value={blue}
+            onChange={setBlue}
+            color="#007aff"
+          />
         </View>
       </View>
     </View>
   );
 }
 
+function ColorSlider({ label, value, onChange, color }) {
+  return (
+    <View style={estilos.sliderContainer}>
+      <View style={estilos.labelRow}>
+        <Text style={estilos.label}>{label}</Text>
+        <Text style={estilos.valueText}>{value}</Text>
+      </View>
 
-
-  <View >
-    <View >
-      <Text ></Text>
-      <Text ></Text>
+      <Slider
+        minimumValue={0}
+        maximumValue={255}
+        step={1}
+        value={value}
+        onValueChange={onChange}
+        minimumTrackTintColor={color}
+        maximumTrackTintColor="#ddd"
+        thumbTintColor={color}
+        style={estilos.slider}
+      />
     </View>
-    <Slider
-      minimumValue={0}
-      maximumValue={255}
-      step={1}
-      value={''}
-      onValueChange={''}
-      minimumTrackTintColor={''}
-      maximumTrackTintColor="#ddd"
-      thumbTintColor={''}
-      style={estilos.slider}
-    />
-  </View>
-
+  );
+}
 
 const estilos = StyleSheet.create({
   container: {
@@ -64,6 +87,7 @@ const estilos = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     marginBottom: 40,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   title: {
     fontSize: 14,
@@ -76,14 +100,14 @@ const estilos = StyleSheet.create({
     fontSize: 48,
     fontWeight: 'bold',
     marginVertical: 8,
-    fontFamily: 'System', // Ou Monospace se disponível
+    fontFamily: 'System',
   },
   rgbText: {
     fontSize: 16,
     opacity: 0.7,
   },
   controls: {
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255,255,255,0.7)',
     padding: 15,
     borderRadius: 20,
   },
